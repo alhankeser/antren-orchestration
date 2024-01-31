@@ -42,4 +42,12 @@ with DAG(
         gcp_conn_id="gcp",
     )
 
-    get_latest_activities >> load_gcs_to_bigquery
+    run_dbt = CloudRunExecuteJobOperator(
+        task_id="run_dbt",
+        project_id=PROJECT_ID,
+        job_name="dbt",
+        region="europe-west9",
+        gcp_conn_id="gcp",
+    )
+
+    get_latest_activities >> load_gcs_to_bigquery >> run_dbt
